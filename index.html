@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>赛博榫卯 - 数字孪生展示</title>
+    <script type="module" src="https://lib.baomitu.com/model-viewer/1.12.0/model-viewer.min.js"></script>
+    <style>
+        body { margin: 0; background-color: #1a1a1a; font-family: sans-serif; }
+        model-viewer { width: 100vw; height: 100vh; } /* 全屏显示 */
+        .title {
+            position: absolute; top: 20px; left: 20px; color: white;
+            z-index: 999; text-shadow: 0 0 10px #00ff00;
+        }
+    </style>
+</head>
+<body>
+    <div class="title">
+        <h2>赛博榫卯 Cyber-Mortise</h2>
+        <p>双指缩放 | 单指旋转 | 自动展示</p>
+    </div>
+
+    <model-viewer 
+        src="./luban.glb" 
+        alt="智能鲁班锁3D模型"
+        auto-rotate 
+        camera-controls 
+        shadow-intensity="1"
+        ar > </model-viewer>
+</body>
+</html>
