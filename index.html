@@ -7,9 +7,12 @@
     <script type="module" src="./model-viewer.min.js"></script>
     <style>
         body { margin: 0; background-color: #1a1a1a; font-family: sans-serif; overflow: hidden; }
+        /* 让模型占满全屏 */
         model-viewer { width: 100vw; height: 100vh; background-color: #1a1a1a; }
+        
+        /* 赛博朋克风格标题 */
         .title {
-            position: absolute; top: 20px; left: 20px; color: #00ff00; /* 赛博绿 */
+            position: absolute; top: 20px; left: 20px; color: #00ff00;
             z-index: 999; text-shadow: 0 0 10px #00ff00; pointer-events: none;
         }
         h2 { margin: 0; font-size: 1.5rem; }
@@ -34,3 +37,4 @@
     </model-viewer>
 </body>
 </html>
+
