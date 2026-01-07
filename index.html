@@ -24,17 +24,24 @@
         <h2>赛博榫卯 Cyber-Mortise</h2>
         <p>双指缩放 | 单指旋转 | 自动展示</p>
     </div>
-
-    <model-viewer 
+        <model-viewer 
         src="./luban.glb" 
         alt="智能鲁班锁3D模型"
-        auto-rotate 
-        camera-controls 
-        shadow-intensity="1"
+        
+        autoplay 
+        animation-name="*" 
+        loop
+        
         environment-image="neutral" 
+        shadow-intensity="1" 
         exposure="1"
-        ar>
-    </model-viewer>
+        
+        ar 
+        camera-controls 
+        auto-rotate
+        rotation-per-second="30deg"> 
+        </model-viewer>
 </body>
 </html>
+
 
