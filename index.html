@@ -7,10 +7,8 @@
     <script type="module" src="./model-viewer.min.js"></script>
     <style>
         body { margin: 0; background-color: #1a1a1a; font-family: sans-serif; overflow: hidden; }
-        /* 让模型占满全屏 */
-        model-viewer { width: 75vw; height: 75vh; background-color: #1a1a1a; }
+        model-viewer { width: 100vw; height: 100vh; background-color: #1a1a1a; }
         
-        /* 赛博朋克风格标题 */
         .title {
             position: absolute; top: 20px; left: 20px; color: #00ff00;
             z-index: 999; text-shadow: 0 0 10px #00ff00; pointer-events: none;
@@ -18,7 +16,6 @@
         h2 { margin: 0; font-size: 1.5rem; }
         p { margin: 5px 0 0 0; font-size: 0.8rem; opacity: 0.8; }
 
-        /* 按钮样式 */
         #play-trigger {
             pointer-events: auto;
             cursor: pointer;
@@ -42,12 +39,20 @@
         id="luban-lock" 
         src="./luban.glb" 
         alt="智能鲁班锁3D模型"
-        camera-orbit="0deg 75deg 250%"
+        
+        camera-orbit="0deg 75deg 105%" 
+        field-of-view="30deg"
+        min-field-of-view="10deg"
+        max-field-of-view="180deg"
+        interpolation-decay="200"
+
         animation-name="*" 
         loop
+        
         environment-image="neutral" 
         shadow-intensity="1" 
         exposure="1"
+        
         ar 
         camera-controls 
         auto-rotate 
@@ -60,40 +65,37 @@
         let isExploded = false;
 
         playButton.addEventListener('click', () => {
-            console.log('按钮被点击了！当前状态:', isExploded ? '爆炸中' : '静止中');
-
             if (!isExploded) {
-                // =========== 🚀 启动爆炸模式 ===========
+                // =========== 🚀 启动爆炸 (变广角) ===========
                 
                 // 1. 停止自转
                 modelViewer.removeAttribute('auto-rotate');
 
-                // 2. 【关键修改】拉得更远！改成 800% 试试
-                console.log('正在执行：拉远镜头到 800%');
-                modelViewer.setAttribute('camera-orbit', '0deg 75deg 800%');
+                // 2. 🔥【核心大招】开启广角模式！
+                // 将视野从 30deg 改成 100deg (数字越大，东西看着越小)
+                // 这就像手机开了 0.5x 超广角
+                modelViewer.setAttribute('field-of-view', '100deg');
 
                 // 3. 播放动画
                 modelViewer.play();
 
-                // 4. 更新按钮
                 playButton.textContent = '⏹ 点击停止并复位';
                 isExploded = true;
 
             } else {
-                // =========== 🔄 复位回初始状态 ===========
+                // =========== 🔄 复位 (变长焦) ===========
                 
                 // 1. 恢复自转
                 modelViewer.setAttribute('auto-rotate', '');
 
-                // 2. 暂停并重置动画
+                // 2. 🔥【核心大招】恢复长焦特写
+                // 改回 30deg，物体瞬间拉近变大
+                modelViewer.setAttribute('field-of-view', '30deg');
+
+                // 3. 停止动画
                 modelViewer.pause();
                 modelViewer.currentTime = 0;
 
-                // 3. 【关键修改】镜头拉近回原位 250%
-                console.log('正在执行：拉近镜头回 250%');
-                modelViewer.setAttribute('camera-orbit', '0deg 75deg 250%');
-
-                // 4. 更新按钮
                 playButton.textContent = '▶ 点击启动爆炸演示';
                 isExploded = false;
             }
@@ -101,4 +103,3 @@
     </script>
 </body>
 </html>
-
