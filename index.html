@@ -65,43 +65,48 @@
         let isExploded = false;
 
         playButton.addEventListener('click', () => {
-            if (!isExploded) {
-                // =========== 🚀 启动爆炸 (变广角) ===========
-                
-                // 1. 停止自转
-                modelViewer.removeAttribute('auto-rotate');
+    if (!isExploded) {
+        // =========== 🚀 启动爆炸 (正放) ===========
+        modelViewer.removeAttribute('auto-rotate');
+        modelViewer.setAttribute('field-of-view', '60deg'); // 广角
 
-                // 2. 🔥【核心大招】开启广角模式！
-                // 将视野从 30deg 改成 100deg (数字越大，东西看着越小)
-                // 这就像手机开了 0.5x 超广角
-                modelViewer.setAttribute('field-of-view', '40deg');
+        // 关键点 1：设置播放速度为正数
+        modelViewer.timeScale = 1; 
+        
+        modelViewer.play();
+        
+        playButton.textContent = '⏹ 点击合拢 (倒放复位)';
+        isExploded = true;
 
-                // 3. 播放动画
-                modelViewer.play();
+    } else {
+        // =========== 🔄 合拢 (倒放) ===========
+        // 注意：这里不再只是简单的 pause() 了
+        
+        // 关键点 2：设置播放速度为负数 (倒放)
+        modelViewer.timeScale = -1;
+        
+        // 必须调用 play() 也就是 "开始倒着播"
+        modelViewer.play();
 
-                playButton.textContent = '⏹ 点击停止并复位';
-                isExploded = true;
-
-            } else {
-                // =========== 🔄 复位 (变长焦) ===========
-                
-                // 1. 恢复自转
-                modelViewer.setAttribute('auto-rotate', '');
-
-                // 2. 🔥【核心大招】恢复长焦特写
-                // 改回 30deg，物体瞬间拉近变大
-                modelViewer.setAttribute('field-of-view', '30deg');
-
-                // 3. 停止动画
-                modelViewer.pause();
-                modelViewer.currentTime = 0;
-
-                playButton.textContent = '▶ 点击启动爆炸演示';
-                isExploded = false;
-            }
-        });
+        // 监听：等倒放结束了（回到第0秒），再恢复长焦和自转
+        // 我们用一个一次性的定时器或者监听器来处理"倒放完成"后的事
+        // 这里用一个简单粗暴的方法：计算动画时长
+        const duration = modelViewer.duration * 1000; // 获取动画总时长(毫秒)
+        
+        setTimeout(() => {
+            // 倒放播完了，此时应该回到了合拢状态
+            modelViewer.pause();
+            modelViewer.setAttribute('auto-rotate', ''); // 恢复自转
+            modelViewer.setAttribute('field-of-view', '30deg'); // 恢复长焦
+            playButton.textContent = '▶ 点击启动爆炸演示';
+        }, duration); // 等待动画播完
+        
+        isExploded = false;
+    }
+});
     </script>
 </body>
 </html>
+
 
 
