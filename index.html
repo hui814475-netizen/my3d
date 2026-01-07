@@ -24,24 +24,29 @@
         <h2>赛博榫卯 Cyber-Mortise</h2>
         <p>双指缩放 | 单指旋转 | 自动展示</p>
     </div>
-        <model-viewer 
-        src="./luban.glb" 
-        alt="智能鲁班锁3D模型"
-        
-        autoplay 
-        animation-name="*" 
-        loop
-        
-        environment-image="neutral" 
-        shadow-intensity="1" 
-        exposure="1"
-        
-        ar 
-        camera-controls 
-        auto-rotate
-        rotation-per-second="30deg"> 
-        </model-viewer>
+<model-viewer 
+    src="./luban.glb" 
+    alt="智能鲁班锁3D模型"
+    
+    /* 🔥 核心修改：让模型变小（把相机拉远） 🔥 */
+    /* 参数解释：水平角度 垂直角度 距离(默认是105%，改成200%就是拉远一倍) */
+    camera-orbit="0deg 75deg 250%"
+    
+    autoplay 
+    animation-name="*" 
+    loop
+    
+    environment-image="neutral" 
+    shadow-intensity="1" 
+    exposure="1"
+    
+    ar 
+    camera-controls 
+    auto-rotate
+    rotation-per-second="30deg">
+</model-viewer>
 </body>
 </html>
+
 
 
