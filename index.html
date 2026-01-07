@@ -60,53 +60,69 @@
     </model-viewer>
 
     <script>
-        const modelViewer = document.querySelector('#luban-lock');
-        const playButton = document.querySelector('#play-trigger');
-        let isExploded = false;
+    const modelViewer = document.querySelector('#luban-lock');
+    const playButton = document.querySelector('#play-trigger');
+    
+    // 标记：一开始是“炸开”的状态
+    let isExploded = true; 
 
-        playButton.addEventListener('click', () => {
-    if (!isExploded) {
-        // =========== 🚀 启动爆炸 (正放) ===========
-        modelViewer.removeAttribute('auto-rotate');
-        modelViewer.setAttribute('field-of-view', '60deg'); // 广角
+    // 🔥 关键点 1：等待模型加载完成，然后瞬间跳到“爆炸”状态
+    modelViewer.addEventListener('load', () => {
+        // 获取动画总时长
+        const duration = modelViewer.duration; 
+        
+        // 把进度条拉到最后一秒 (相当于一开始就是炸开的)
+        modelViewer.currentTime = duration; 
+        modelViewer.pause(); // 暂停住，别循环
+        
+        // 初始视野设为广角 (因为是炸开的，需要大视野)
+        modelViewer.setAttribute('field-of-view', '60deg'); 
+        
+        // 按钮文字初始化
+        playButton.textContent = '⏹ 点击拼装 (倒放)';
+    });
 
-        // 关键点 1：设置播放速度为正数
-        modelViewer.timeScale = 1; 
-        
-        modelViewer.play();
-        
-        playButton.textContent = '⏹ 点击合拢 (倒放复位)';
-        isExploded = true;
+    playButton.addEventListener('click', () => {
+        if (isExploded) {
+            // =========== 🧩 执行拼装 (倒放) ===========
+            
+            modelViewer.removeAttribute('auto-rotate'); // 停止自转专心拼装
 
-    } else {
-        // =========== 🔄 合拢 (倒放) ===========
-        // 注意：这里不再只是简单的 pause() 了
-        
-        // 关键点 2：设置播放速度为负数 (倒放)
-        modelViewer.timeScale = -1;
-        
-        // 必须调用 play() 也就是 "开始倒着播"
-        modelViewer.play();
+            // 🔥 关键点 2：设置速度为 -1 (倒放)
+            modelViewer.timeScale = -1; 
+            
+            modelViewer.play();
 
-        // 监听：等倒放结束了（回到第0秒），再恢复长焦和自转
-        // 我们用一个一次性的定时器或者监听器来处理"倒放完成"后的事
-        // 这里用一个简单粗暴的方法：计算动画时长
-        const duration = modelViewer.duration * 1000; // 获取动画总时长(毫秒)
-        
-        setTimeout(() => {
-            // 倒放播完了，此时应该回到了合拢状态
-            modelViewer.pause();
-            modelViewer.setAttribute('auto-rotate', ''); // 恢复自转
-            modelViewer.setAttribute('field-of-view', '30deg'); // 恢复长焦
-            playButton.textContent = '▶ 点击启动爆炸演示';
-        }, duration); // 等待动画播完
-        
-        isExploded = false;
-    }
-});
-    </script>
+            playButton.textContent = '▶ 点击再次爆炸';
+            isExploded = false;
+            
+            // 监听：等拼好了(回到0秒)，把视野拉近
+            setTimeout(() => {
+                 modelViewer.setAttribute('field-of-view', '30deg'); // 变特写
+                 modelViewer.setAttribute('auto-rotate', ''); // 恢复自转
+            }, modelViewer.duration * 1000);
+
+        } else {
+            // =========== 💥 执行爆炸 (正放) ===========
+            
+            modelViewer.removeAttribute('auto-rotate');
+            
+            // 🔥 关键点 3：设置速度为 1 (正放)
+            modelViewer.timeScale = 1;
+            
+            // 变广角
+            modelViewer.setAttribute('field-of-view', '60deg');
+            
+            modelViewer.play();
+
+            playButton.textContent = '⏹ 点击拼装 (倒放)';
+            isExploded = true;
+        }
+    });
+</script>
 </body>
 </html>
+
 
 
 
