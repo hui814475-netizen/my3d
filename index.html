@@ -17,21 +17,34 @@
         }
         h2 { margin: 0; font-size: 1.5rem; }
         p { margin: 5px 0 0 0; font-size: 0.8rem; opacity: 0.8; }
+
+        /* 🔥 新增：让点击按钮看起来像个按钮 🔥 */
+        #play-trigger {
+            pointer-events: auto; /* 让它能接收点击 */
+            cursor: pointer;
+            color: #ffff00; /* 黄色高亮 */
+            text-decoration: underline;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        #play-trigger:hover {
+            color: #ffffff; text-shadow: 0 0 15px #ffff00;
+        }
     </style>
 </head>
 <body>
     <div class="title">
         <h2>赛博榫卯 Cyber-Mortise</h2>
-        <p>双指缩放 | 单指旋转 | 自动展示</p>
+        <p>双指缩放 | 单指旋转 | <span id="play-trigger">▶ 点击启动爆炸演示</span></p>
     </div>
+
 <model-viewer 
+    id="luban-lock" 
     src="./luban.glb" 
     alt="智能鲁班锁3D模型"
     
-    /* 🔥 核心修改：让模型变小（把相机拉远） 🔥 */
-    /* 参数解释：水平角度 垂直角度 距离(默认是105%，改成200%就是拉远一倍) */
+    /* 初始状态：比较近的距离 (250%) */
     camera-orbit="0deg 75deg 250%"
-    
     
     animation-name="*" 
     loop
@@ -45,9 +58,48 @@
     auto-rotate
     rotation-per-second="30deg">
 </model-viewer>
+
+<script>
+    // 1. 找到页面上的元素
+    const modelViewer = document.querySelector('#luban-lock');
+    const playButton = document.querySelector('#play-trigger');
+
+    // 2. 定义一个标志位，记录现在是不是“爆炸状态”
+    let isExploded = false;
+
+    // 3. 监听按钮的点击事件
+    playButton.addEventListener('click', () => {
+        
+        if (!isExploded) {
+            // --- 如果还没爆炸，就执行爆炸流程 ---
+            
+            // A. 拉远镜头！把距离从 250% 改成 500% (根据你的模型大小微调这个数字)
+            // model-viewer 会自动平滑过渡过去
+            modelViewer.setAttribute('camera-orbit', '0deg 75deg 500%');
+
+            // B. 开始播放动画
+            modelViewer.play();
+
+            // C. 更新按钮文字和状态
+            playButton.textContent = '⏹ 点击停止并复位';
+            isExploded = true;
+
+        } else {
+            // --- 如果已经是爆炸状态，点击就复位 ---
+            
+            // A. 暂停动画并回到开头
+            modelViewer.pause();
+            modelViewer.currentTime = 0;
+
+            // B. 镜头拉近回原位
+            modelViewer.setAttribute('camera-orbit', '0deg 75deg 250%');
+
+             // C. 更新按钮文字和状态
+            playButton.textContent = '▶ 点击启动爆炸演示';
+            isExploded = false;
+        }
+    });
+</script>
+
 </body>
 </html>
-
-
-
-
