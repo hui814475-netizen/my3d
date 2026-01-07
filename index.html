@@ -42,16 +42,12 @@
         id="luban-lock" 
         src="./luban.glb" 
         alt="智能鲁班锁3D模型"
-        
         camera-orbit="0deg 75deg 250%"
-        
         animation-name="*" 
         loop
-        
         environment-image="neutral" 
         shadow-intensity="1" 
         exposure="1"
-        
         ar 
         camera-controls 
         auto-rotate 
@@ -64,15 +60,17 @@
         let isExploded = false;
 
         playButton.addEventListener('click', () => {
-            
+            console.log('按钮被点击了！当前状态:', isExploded ? '爆炸中' : '静止中');
+
             if (!isExploded) {
                 // =========== 🚀 启动爆炸模式 ===========
                 
-                // 1. 停止自转 (为了让用户看清爆炸细节，建议停掉)
+                // 1. 停止自转
                 modelViewer.removeAttribute('auto-rotate');
 
-                // 2. 拉远镜头 (从 250% -> 500%)
-                modelViewer.setAttribute('camera-orbit', '0deg 75deg 500%');
+                // 2. 【关键修改】拉得更远！改成 800% 试试
+                console.log('正在执行：拉远镜头到 800%');
+                modelViewer.setAttribute('camera-orbit', '0deg 75deg 800%');
 
                 // 3. 播放动画
                 modelViewer.play();
@@ -84,14 +82,15 @@
             } else {
                 // =========== 🔄 复位回初始状态 ===========
                 
-                // 1. 恢复自转 (核心需求：复位后继续转)
+                // 1. 恢复自转
                 modelViewer.setAttribute('auto-rotate', '');
 
                 // 2. 暂停并重置动画
                 modelViewer.pause();
                 modelViewer.currentTime = 0;
 
-                // 3. 镜头拉近回原位
+                // 3. 【关键修改】镜头拉近回原位 250%
+                console.log('正在执行：拉近镜头回 250%');
                 modelViewer.setAttribute('camera-orbit', '0deg 75deg 250%');
 
                 // 4. 更新按钮
